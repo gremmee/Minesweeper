@@ -1,3 +1,4 @@
+package nl.gremmee.minesweeper;
 
 public class Cell {
 
@@ -6,6 +7,8 @@ public class Cell {
     private int w;
     private int x;
     private int y;
+    private boolean mine;
+    private boolean revealed;
 
     public Cell(final int aI, final int aJ, final int aW) {
         this.i = aI;
@@ -13,6 +16,8 @@ public class Cell {
         this.w = aW;
         this.setX(this.i * this.w);
         this.setY(this.j * this.w);
+        this.setMine(true);
+        this.setRevealed(true);
     }
 
     public int getI() {
@@ -53,5 +58,21 @@ public class Cell {
 
     public void setX(final int aX) {
         this.x = aX;
+    }
+
+    public boolean isMine() {
+        return this.mine;
+    }
+
+    public void setMine(final boolean aMine) {
+        this.mine = aMine;
+    }
+
+    public boolean isRevealed() {
+        return this.revealed;
+    }
+
+    public void setRevealed(final boolean aRevealed) {
+        this.revealed = aRevealed;
     }
 }

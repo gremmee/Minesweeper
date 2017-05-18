@@ -1,3 +1,4 @@
+package nl.gremmee.minesweeper;
 
 public class Minesweeper {
 
