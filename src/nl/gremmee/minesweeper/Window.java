@@ -10,17 +10,18 @@ import javax.swing.JFrame;
 public class Window extends Canvas {
     private static final long serialVersionUID = 1522602361354624706L;
 
-    public static int x;
-    public static int y;
-    public static boolean printMaze = false;
+    public static int mouseX;
+    public static int mouseY;
+    public static boolean cellClicked = false;
+    public static boolean cellMarked = false;
 
-    public Window(int aWidth, int aHeight, String aTitle, Minesweeper aMain) {
+    public Window(final int aWidth, final int aHeight, final String aTitle, final Minesweeper aMain) {
         JFrame frame = new JFrame(aTitle);
         aMain.addMouseMotionListener(new MouseAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                x = e.getX();
-                y = e.getY();
+                mouseX = e.getX();
+                mouseY = e.getY();
             }
         });
         aMain.addMouseListener(new MouseAdapter() {
@@ -30,11 +31,14 @@ public class Window extends Canvas {
                     if (Minesweeper.isGameOver()) {
                         Minesweeper.setRestart(true);
                     }
-                    printMaze = true;
+                    cellClicked = true;
                 } else if (MouseEvent.BUTTON2 == e.getButton()) {
                     // Nothing
                 } else if (MouseEvent.BUTTON3 == e.getButton()) {
-                    System.exit(0);
+                    if (Minesweeper.isGameOver()) {
+                        System.exit(0);
+                    }
+                    cellMarked = true;
                 }
             }
         });
@@ -55,20 +59,28 @@ public class Window extends Canvas {
         aMain.start();
     }
 
-    public static boolean getPrintMaze() {
-        return printMaze;
+    public static boolean isCellClicked() {
+        return cellClicked;
+    }
+
+    public static boolean isCellMarked() {
+        return cellMarked;
+    }
+
+    public static void setCellClicked(boolean aValue) {
+        cellClicked = aValue;
+    }
+
+    public static void setCellMarked(boolean aValue) {
+        cellMarked = aValue;
     }
 
     public static int getMouseX() {
-        return x;
+        return mouseX;
     }
 
     public static int getMouseY() {
-        return y;
+        return mouseY;
     }
 
-    public static void setPrintMaze(boolean aValue) {
-        printMaze = aValue;
-
-    }
 }

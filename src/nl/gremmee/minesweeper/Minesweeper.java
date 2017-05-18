@@ -79,11 +79,17 @@ public class Minesweeper extends Canvas implements Runnable {
                 handler.clearObjects();
                 init();
             }
-            if (Window.getPrintMaze()) {
-                int mouseX = Window.x;
-                int mouseY = Window.y;
+            if (Window.isCellClicked()) {
+                int mouseX = Window.mouseX;
+                int mouseY = Window.mouseY;
                 mousePressed(mouseX, mouseY);
-                Window.setPrintMaze(false);
+                Window.setCellClicked(false);
+            }
+            if (Window.isCellMarked()) {
+                int mouseX = Window.mouseX;
+                int mouseY = Window.mouseY;
+                setMarker(mouseX, mouseY);
+                Window.setCellMarked(false);
             }
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
@@ -100,8 +106,8 @@ public class Minesweeper extends Canvas implements Runnable {
             if ((System.currentTimeMillis() - timer) > 1000) {
                 timer += 1000;
                 int cells = handler.getCells();
-                System.out.println("W x H : " + WIDTH + " x " + HEIGHT + " FPS: " + frames + " : Cells " + cells + "|"
-                        + cols + " " + rows + "|");
+                System.out.println("W mouseX H : " + WIDTH + " mouseX " + HEIGHT + " FPS: " + frames + " : Cells "
+                        + cells + "|" + cols + " " + rows + "|");
                 frames = 0;
             }
         }
@@ -145,7 +151,7 @@ public class Minesweeper extends Canvas implements Runnable {
         handler.update();
     }
 
-    private void mousePressed(int aX, int aY) {
+    private void mousePressed(final int aX, final int aY) {
         handler.mousePressed(aX, aY);
     }
 
@@ -164,8 +170,13 @@ public class Minesweeper extends Canvas implements Runnable {
         return restart;
     }
 
-    public static void setRestart(boolean aValue) {
+    public static void setRestart(final boolean aValue) {
         restart = aValue;
+    }
+
+    public static void setMarker(final int aX, final int aY) {
+        handler.setMarker(aX, aY);
+
     }
 
 }

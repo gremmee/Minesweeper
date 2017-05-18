@@ -1,20 +1,17 @@
 package nl.gremmee.minesweeper;
 
 import java.awt.Graphics;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
 import java.util.LinkedList;
 
-public class Handler implements Printable {
+public class Handler {
     LinkedList<Cell> object = new LinkedList<>();
     public Object clearObjects;
 
-    public void addObject(Cell aObject) {
+    public void addObject(final Cell aObject) {
         this.object.add(aObject);
     }
 
-    public Cell getGameObject(Cell aObject) {
+    public Cell getGameObject(final Cell aObject) {
         int index = this.object.indexOf(aObject);
         if (index != -1) {
             return getGameObject(index);
@@ -26,7 +23,7 @@ public class Handler implements Printable {
         object.clear();
     }
 
-    public Cell getGameObject(int aIndex) {
+    public Cell getGameObject(final int aIndex) {
         if (aIndex < 0) {
             return null;
         }
@@ -43,11 +40,11 @@ public class Handler implements Printable {
         return result;
     }
 
-    public void removeObject(Cell aObject) {
+    public void removeObject(final Cell aObject) {
         this.object.remove(aObject);
     }
 
-    public void render(Graphics aGraphics) {
+    public void render(final Graphics aGraphics) {
         for (int i = 0; i < object.size(); i++) {
             Cell tempObject = object.get(i);
             tempObject.render(aGraphics);
@@ -61,13 +58,15 @@ public class Handler implements Printable {
         }
     }
 
-    public void mousePressed(int aX, int aY) {
+    public void mousePressed(final int aX, final int aY) {
         for (int i = 0; i < object.size(); i++) {
             Cell tempObject = object.get(i);
             if (tempObject.contains(aX, aY)) {
-                tempObject.reveal();
-                if (tempObject.isMine()) {
-                    gameOver();
+                if (!tempObject.isMarked()) {
+                    tempObject.reveal();
+                    if (tempObject.isMine()) {
+                        gameOver();
+                    }
                 }
             }
         }
@@ -81,25 +80,13 @@ public class Handler implements Printable {
         }
     }
 
-    @Override
-    public int print(Graphics arg0, PageFormat arg1, int arg2) throws PrinterException {
-        // TODO Auto-generated method stub
-        return 0;
+    public void setMarker(int aX, int aY) {
+        for (int i = 0; i < object.size(); i++) {
+            Cell tempObject = object.get(i);
+            if (tempObject.contains(aX, aY)) {
+                tempObject.mark();
+            }
+        }
     }
 
-    // @Override
-    // public int print(Graphics aGraphics, PageFormat aPageFormat, int aPageIndex) throws PrinterException {
-    // if (aPageIndex > 0) {
-    // return NO_SUCH_PAGE;
-    // }
-    // int pWidth = (int) Math.round(aPageFormat.getImageableWidth() / MazeGenerator.cols);
-    // int pHeight = (int) Math.round(aPageFormat.getImageableHeight() / MazeGenerator.rows);
-    // for (int i = 0; i < object.size(); i++) {
-    // Cell tempObject = object.get(i);
-    // tempObject.setPrintWidth(pWidth);
-    // tempObject.setPrintHeight(pHeight);
-    // tempObject.render(aGraphics);
-    // }
-    // return PAGE_EXISTS;
-    // }
 }

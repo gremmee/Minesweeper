@@ -16,6 +16,7 @@ public class Cell {
     private int y;
     private boolean mine;
     private boolean revealed;
+    private boolean marked;
     private Handler handler;
     private int neighborCount;
     private int cols;
@@ -35,6 +36,7 @@ public class Cell {
         this.setX(this.i * this.w);
         this.setY(this.j * this.w);
         this.setRevealed(false);
+        this.setMarked(false);
     }
 
     public boolean contains(final int aX, final int aY) {
@@ -66,7 +68,7 @@ public class Cell {
         this.neighborCount = total;
     }
 
-    public void doRender(Graphics aGraphics) {
+    public void doRender(final Graphics aGraphics) {
         aGraphics.setColor(Color.black);
         aGraphics.drawRect(this.x, this.y, this.w, this.w);
         if (this.revealed) {
@@ -112,13 +114,19 @@ public class Cell {
                             new Rectangle(this.x, this.y, this.w, this.w), new Font("Arial", Font.BOLD, 24));
                 }
             }
+        } else {
+            if (this.marked) {
+                aGraphics.setColor(Color.black);
+                aGraphics.drawLine(this.x, this.y, this.x + this.w, this.y + this.w);
+                aGraphics.drawLine(this.x + this.w, this.y, this.x, this.y + this.w);
+            }
         }
     }
 
     public void doUpdate() {
     }
 
-    public void render(Graphics aGraphics) {
+    public void render(final Graphics aGraphics) {
         doRender(aGraphics);
     }
 
@@ -174,6 +182,14 @@ public class Cell {
         this.mine = aMine;
     }
 
+    public boolean isMarked() {
+        return this.marked;
+    }
+
+    public void setMarked(final boolean aMarked) {
+        this.marked = aMarked;
+    }
+
     public boolean isRevealed() {
         return this.revealed;
     }
@@ -208,7 +224,8 @@ public class Cell {
         this.handler = aHandler;
     }
 
-    protected void drawCenteredString(Graphics aGraphics, String aText, Rectangle aRectangle, Font aFont) {
+    protected void drawCenteredString(final Graphics aGraphics, final String aText, final Rectangle aRectangle,
+            final Font aFont) {
         // Get the FontMetrics
         FontMetrics metrics = aGraphics.getFontMetrics(aFont);
         // Determine the X coordinate for the text
@@ -220,6 +237,11 @@ public class Cell {
         aGraphics.setFont(aFont);
         // Draw the String
         aGraphics.drawString(aText, x + aRectangle.x, y + aRectangle.y);
+    }
+
+    public void mark() {
+        this.setMarked(!this.isMarked());
+
     }
 
 }
