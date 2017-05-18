@@ -31,7 +31,14 @@ public class Minesweeper extends Canvas implements Runnable {
 
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
-                handler.addObject(new Cell(i, j, defaultCell));
+                handler.addObject(new Cell(i, j, defaultCell, cols, rows));
+            }
+        }
+        for (int j = 0; j < rows; j++) {
+            for (int i = 0; i < cols; i++) {
+                Cell cell = handler.getGameObject(i + (j * cols));
+                cell.setHandler(handler);
+                cell.countNeighbors();
             }
         }
 
