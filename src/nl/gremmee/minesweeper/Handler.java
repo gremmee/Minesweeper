@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 public class Handler implements Printable {
     LinkedList<Cell> object = new LinkedList<>();
+    public Object clearObjects;
 
     public void addObject(Cell aObject) {
         this.object.add(aObject);
@@ -19,6 +20,10 @@ public class Handler implements Printable {
             return getGameObject(index);
         }
         return null;
+    }
+
+    public void clearObjects() {
+        object.clear();
     }
 
     public Cell getGameObject(int aIndex) {
@@ -59,8 +64,20 @@ public class Handler implements Printable {
     public void mousePressed(int aX, int aY) {
         for (int i = 0; i < object.size(); i++) {
             Cell tempObject = object.get(i);
-            if (tempObject.contains(aX, aY))
+            if (tempObject.contains(aX, aY)) {
                 tempObject.reveal();
+                if (tempObject.isMine()) {
+                    gameOver();
+                }
+            }
+        }
+    }
+
+    private void gameOver() {
+        Minesweeper.setGameOver(true);
+        for (int i = 0; i < object.size(); i++) {
+            Cell tempObject = object.get(i);
+            tempObject.setRevealed(true);
         }
     }
 

@@ -27,6 +27,9 @@ public class Window extends Canvas {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (MouseEvent.BUTTON1 == e.getButton()) {
+                    if (Minesweeper.isGameOver()) {
+                        Minesweeper.setRestart(true);
+                    }
                     printMaze = true;
                 } else if (MouseEvent.BUTTON2 == e.getButton()) {
                     // Nothing

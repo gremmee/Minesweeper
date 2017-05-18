@@ -16,6 +16,8 @@ public class Minesweeper extends Canvas implements Runnable {
     public static int rows;
     public static Handler handler;
     public static int defaultCell = 50;
+    private static boolean gameOver = false;
+    private static boolean restart = false;
     private int totalMines = 10;
     private Cell current;
     private Cell[] grid;
@@ -28,8 +30,14 @@ public class Minesweeper extends Canvas implements Runnable {
         handler = new Handler();
         cols = Math.floorDiv(WIDTH, defaultCell);
         rows = Math.floorDiv(HEIGHT, defaultCell);
-        grid = new Cell[cols * rows];
-        stack = new Stack<>();
+        init();
+
+        new Window(WIDTH, HEIGHT, "Minesweeper", this);
+    }
+
+    private void init() {
+        setRestart(false);
+        setGameOver(false);
 
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
@@ -51,8 +59,6 @@ public class Minesweeper extends Canvas implements Runnable {
                 cell.countNeighbors();
             }
         }
-
-        new Window(WIDTH, HEIGHT, "Minesweeper", this);
     }
 
     public static void main(String[] args) {
@@ -69,6 +75,10 @@ public class Minesweeper extends Canvas implements Runnable {
         long timer = System.currentTimeMillis();
         frames = 0;
         while (running) {
+            if (isRestart()) {
+                handler.clearObjects();
+                init();
+            }
             if (Window.getPrintMaze()) {
                 int mouseX = Window.x;
                 int mouseY = Window.y;
@@ -137,6 +147,25 @@ public class Minesweeper extends Canvas implements Runnable {
 
     private void mousePressed(int aX, int aY) {
         handler.mousePressed(aX, aY);
+    }
+
+    public static void setGameOver(boolean aValue) {
+        gameOver = aValue;
+
+    }
+
+    public static boolean isGameOver() {
+
+        return gameOver;
+    }
+
+    public static boolean isRestart() {
+
+        return restart;
+    }
+
+    public static void setRestart(boolean aValue) {
+        restart = aValue;
     }
 
 }

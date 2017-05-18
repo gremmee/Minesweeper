@@ -29,7 +29,7 @@ public class Cell {
         this.rows = aRows;
         this.neighborCount = 0;
         Random rnd = new Random();
-        if (rnd.nextInt(cols * rows) < (int) (cols * rows / 10)) {
+        if (rnd.nextInt(cols * rows) < (int) (cols * rows / 5)) {
             this.setMine(true);
         }
         this.setX(this.i * this.w);
@@ -44,9 +44,10 @@ public class Cell {
                 aY < this.y + this.w);
     }
 
-    public int countNeighbors() {
+    public void countNeighbors() {
         if (this.mine) {
-            return -1;
+            this.neighborCount = -1;
+            return;
         }
         int total = 0;
         for (int xoff = -1; xoff <= 1; xoff++) {
@@ -63,7 +64,6 @@ public class Cell {
             }
         }
         this.neighborCount = total;
-        return total;
     }
 
     public void doRender(Graphics aGraphics) {
@@ -71,14 +71,43 @@ public class Cell {
         aGraphics.drawRect(this.x, this.y, this.w, this.w);
         if (this.revealed) {
             if (this.mine) {
-                aGraphics.setColor(Color.gray);
+                aGraphics.setColor(Color.red);
                 aGraphics.fillOval(this.x + (int) (this.w * 0.25), this.y + (int) (this.w * 0.25), (int) (this.w * 0.5),
                         (int) (this.w * 0.5));
             } else {
                 aGraphics.setColor(new Color(200, 200, 200, 50));
                 aGraphics.fillRect(this.x, this.y, this.w, this.w);
                 if (this.neighborCount > 0) {
-                    aGraphics.setColor(Color.black);
+                    switch (this.neighborCount) {
+                        case 1:
+                            aGraphics.setColor(new Color(0, 0, 255));
+                            break;
+                        case 2:
+                            aGraphics.setColor(new Color(0, 128, 0));
+                            break;
+                        case 3:
+                            aGraphics.setColor(new Color(255, 0, 0));
+                            break;
+                        case 4:
+                            aGraphics.setColor(new Color(0, 0, 128));
+                            break;
+                        case 5:
+                            aGraphics.setColor(new Color(128, 0, 0));
+                            break;
+                        case 6:
+                            aGraphics.setColor(new Color(0, 128, 128));
+                            break;
+                        case 7:
+                            aGraphics.setColor(new Color(128, 0, 128));
+                            break;
+                        case 8:
+                            aGraphics.setColor(new Color(128, 128, 128));
+                            break;
+
+                        default:
+                            aGraphics.setColor(Color.black);
+                            break;
+                    }
                     drawCenteredString(aGraphics, "" + this.neighborCount,
                             new Rectangle(this.x, this.y, this.w, this.w), new Font("Arial", Font.BOLD, 24));
                 }
