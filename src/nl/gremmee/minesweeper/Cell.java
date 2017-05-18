@@ -29,12 +29,12 @@ public class Cell {
         this.rows = aRows;
         this.neighborCount = 0;
         Random rnd = new Random();
-        if (rnd.nextInt(100) < 50) {
+        if (rnd.nextInt(cols * rows) < (int) (cols * rows / 10)) {
             this.setMine(true);
         }
         this.setX(this.i * this.w);
         this.setY(this.j * this.w);
-        this.setRevealed(true);
+        this.setRevealed(false);
     }
 
     public boolean contains(final int aX, final int aY) {
@@ -75,11 +75,13 @@ public class Cell {
                 aGraphics.fillOval(this.x + (int) (this.w * 0.25), this.y + (int) (this.w * 0.25), (int) (this.w * 0.5),
                         (int) (this.w * 0.5));
             } else {
-                aGraphics.setColor(Color.gray);
+                aGraphics.setColor(new Color(200, 200, 200, 50));
                 aGraphics.fillRect(this.x, this.y, this.w, this.w);
-                aGraphics.setColor(Color.black);
-                drawCenteredString(aGraphics, "" + this.neighborCount, new Rectangle(this.x, this.y, this.w, this.w),
-                        new Font("Arial", Font.BOLD, 24));
+                if (this.neighborCount > 0) {
+                    aGraphics.setColor(Color.black);
+                    drawCenteredString(aGraphics, "" + this.neighborCount,
+                            new Rectangle(this.x, this.y, this.w, this.w), new Font("Arial", Font.BOLD, 24));
+                }
             }
         }
     }
@@ -149,6 +151,28 @@ public class Cell {
 
     public void setRevealed(final boolean aRevealed) {
         this.revealed = aRevealed;
+    }
+
+    public void reveal() {
+        this.setRevealed(true);
+        if (this.neighborCount == 0) {
+            this.floodFill();
+        }
+    }
+
+    private void floodFill() {
+        for (int xoff = -1; xoff <= 1; xoff++) {
+            for (int yoff = -1; yoff <= 1; yoff++) {
+                int i = this.i + xoff;
+                int j = this.j + yoff;
+                if (i > -1 && i < this.cols && j > -1 && j < this.rows) {
+                    Cell neighbor = this.handler.getGameObject(i + (j * this.cols));
+                    if (!neighbor.isMine() && !neighbor.isRevealed()) {
+                        neighbor.reveal();
+                    }
+                }
+            }
+        }
     }
 
     public void setHandler(final Handler aHandler) {

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 import java.util.Stack;
 
 public class Minesweeper extends Canvas implements Runnable {
@@ -15,6 +16,7 @@ public class Minesweeper extends Canvas implements Runnable {
     public static int rows;
     public static Handler handler;
     public static int defaultCell = 50;
+    private int totalMines = 10;
     private Cell current;
     private Cell[] grid;
     private Stack<Cell> stack;
@@ -34,6 +36,14 @@ public class Minesweeper extends Canvas implements Runnable {
                 handler.addObject(new Cell(i, j, defaultCell, cols, rows));
             }
         }
+
+        for (int n = 0; n < totalMines; n++) {
+            int i = new Random().nextInt(cols);
+            int j = new Random().nextInt(rows);
+            Cell cell = handler.getGameObject(i + (j * cols));
+            cell.setMine(true);
+        }
+
         for (int j = 0; j < rows; j++) {
             for (int i = 0; i < cols; i++) {
                 Cell cell = handler.getGameObject(i + (j * cols));
@@ -42,17 +52,11 @@ public class Minesweeper extends Canvas implements Runnable {
             }
         }
 
-        // current = handler.getGameObject(0);
-
         new Window(WIDTH, HEIGHT, "Minesweeper", this);
     }
 
     public static void main(String[] args) {
         new Minesweeper();
-
-    }
-
-    public void make2DArray(final int aCols, final int aRows) {
 
     }
 

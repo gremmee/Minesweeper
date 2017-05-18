@@ -60,7 +60,7 @@ public class Handler implements Printable {
         for (int i = 0; i < object.size(); i++) {
             Cell tempObject = object.get(i);
             if (tempObject.contains(aX, aY))
-                tempObject.setRevealed(true);
+                tempObject.reveal();
         }
     }
 
