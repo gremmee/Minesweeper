@@ -1,5 +1,9 @@
 package nl.gremmee.minesweeper;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.Random;
+
 public class Cell {
 
     private int i;
@@ -14,10 +18,47 @@ public class Cell {
         this.i = aI;
         this.j = aJ;
         this.w = aW;
+        Random rnd = new Random();
+        if (rnd.nextInt(100) < 50) {
+            this.setMine(true);
+        }
         this.setX(this.i * this.w);
         this.setY(this.j * this.w);
-        this.setMine(true);
-        this.setRevealed(true);
+        this.setRevealed(false);
+    }
+
+    public boolean contains(final int aX, final int aY) {
+        return (aX > this.x && //
+                aX < this.x + this.w && //
+                aY > this.y && //
+                aY < this.y + this.w);
+    }
+
+    public void doRender(Graphics aGraphics) {
+        aGraphics.setColor(Color.black);
+        aGraphics.drawRect(this.x, this.y, this.w, this.w);
+        if (this.revealed) {
+            if (this.mine) {
+                aGraphics.setColor(Color.gray);
+                aGraphics.fillOval(this.x + (int) (this.w * 0.25), this.y + (int) (this.w * 0.25), (int) (this.w * 0.5),
+                        (int) (this.w * 0.5));
+            } else {
+                aGraphics.setColor(Color.gray);
+                aGraphics.fillRect(this.x, this.y, this.w, this.w);
+
+            }
+        }
+    }
+
+    public void doUpdate() {
+    }
+
+    public void render(Graphics aGraphics) {
+        doRender(aGraphics);
+    }
+
+    public void update() {
+        doUpdate();
     }
 
     public int getI() {
